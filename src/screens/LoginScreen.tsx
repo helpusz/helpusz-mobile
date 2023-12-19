@@ -3,14 +3,14 @@ import { View, Text, StyleSheet } from 'react-native';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const HomeScreen: React.FC = () => {
+const LoginScreen: React.FC = () => {
   const handleLogin = async () => {
     try {
       const response = await api.post('/ong/login', {name: 'lucas', email: 'lucas', password: 'lucas' });
       const token = response.data;
 
       // console.log('Resposta do login:', response);
-      console.log('Token HomeScreen:', token);
+      console.log('Token LoginScreen:', token);  
   
       await AsyncStorage.setItem('authToken', token);
   
@@ -59,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default LoginScreen;

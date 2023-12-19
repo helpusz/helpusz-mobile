@@ -12,7 +12,7 @@ const WelcomeScreen = ({ navigation }) => {
 
       <View style={styles.imageContainer}>
         {/* Mudar para SVG */}
-        <Image source={require('../assets/love.png')} style={{ width: '65%', height: '65%' }} />
+        <Image source={require('../assets/images/love.png')} style={{ width: '65%', height: '65%' }} />
       </View>
       
       <View style={styles.buttons}>

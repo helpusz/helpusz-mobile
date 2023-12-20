@@ -5,27 +5,16 @@ import COLORS from '../constants/colors';
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  filled?: boolean;
-  color?: string;
-  style?: ViewStyle;
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
-  const filledBgColor = props.color || COLORS.primary;
-  const outlinedColor = COLORS.white;
-  const bgColor = props.filled ? filledBgColor : outlinedColor;
-  const textColor = COLORS.white;
 
   return (
     <TouchableOpacity
-      style={{
-        ...styles.button,
-        ...{ backgroundColor: bgColor },
-        ...(props.style as object),
-      }}
+      style={styles.button}
       onPress={props.onPress}
     >
-      <Text style={{ fontSize: 18, ...(props.style as TextStyle), ...{ color: textColor } }}>
+      <Text style={styles.placeholder}>
         {props.title}
       </Text>
     </TouchableOpacity>
@@ -37,11 +26,16 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     paddingVertical: 10,
     borderColor: COLORS.primary,
+    backgroundColor: COLORS.primary,
     borderWidth: 2,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  placeholder: {
+    fontSize: 17,
+    color: COLORS.white,
+  }
 });
 
 export default Button;

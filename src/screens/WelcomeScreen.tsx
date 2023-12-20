@@ -19,10 +19,8 @@ const WelcomeScreen = ({ navigation }) => {
         <Button
           title="Criar conta"
           onPress={() => {
-            console.log(navigation);
             navigation.navigate('SignupScreen');
           }}
-          style={styles.button}
         />
         <View>
           <Text style={styles.buttonsText}>

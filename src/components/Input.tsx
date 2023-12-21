@@ -3,7 +3,8 @@ import COLORS from "../constants/colors";
 
 interface InputProps {
   placeholder: string;
-  // onChange: (value: string) => void;
+  onChange: (value: string) => void;
+  secureTextEntry?: boolean;
 }
 
 const Input: React.FC<InputProps> = (props) => {
@@ -12,7 +13,8 @@ const Input: React.FC<InputProps> = (props) => {
       <TextInput
         style={styles.input}
         placeholder={props.placeholder}
-        // onChangeText={props.onChange}
+        onChangeText={props.onChange}
+        secureTextEntry={props.secureTextEntry}
       >
       </TextInput>
     </View>

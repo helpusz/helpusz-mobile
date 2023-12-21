@@ -1,4 +1,6 @@
 enum TypeAccountEnum {
-  VOLUNTEER,
-  ONG
+  VOLUNTEER = "VOLUNTEER",
+  ONG = "ONG"
 }
+
+export default TypeAccountEnum;

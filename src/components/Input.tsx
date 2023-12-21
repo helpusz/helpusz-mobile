@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 4,
     width: '80%',
-    height: '25%',
+    height: 40,
     textAlign: 'center',
     fontSize: 17,
   },

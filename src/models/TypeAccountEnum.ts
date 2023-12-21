@@ -1,0 +1,4 @@
+enum TypeAccountEnum {
+  VOLUNTEER,
+  ONG
+}

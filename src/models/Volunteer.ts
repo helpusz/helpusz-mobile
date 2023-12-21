@@ -11,3 +11,5 @@ class Volunteer {
     this.phone = phone;
   }
 }
+
+export default Volunteer;

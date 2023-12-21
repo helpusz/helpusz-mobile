@@ -11,3 +11,5 @@ class Ong {
     this.cnpj = cnpj;
   }
 }
+
+export default Ong;

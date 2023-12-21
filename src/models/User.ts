@@ -1,8 +1,11 @@
+import TypeAccountEnum from "./TypeAccountEnum";
+
 class User {
-  public name: string;
   public email: string;
   public password: string;
-  public typeAccountEnum: TypeAccountEnum;
+  public typeAccount: TypeAccountEnum;
+
+  public name?: string;
 
   // Volunteer
   public phone?: string;
@@ -10,12 +13,14 @@ class User {
   // Ong
   public cnpj?: string;
 
-  constructor(name: string, email: string, password: string, typeAccountEnum: TypeAccountEnum, phone?: string, cpnj?: string) {
-    this.name = name;
+  constructor(email: string, password: string, typeAccount: TypeAccountEnum, name?: string, phone?: string, cpnj?: string) {
     this.email = email;
     this.password = password;
-    this.typeAccountEnum = typeAccountEnum;
+    this.typeAccount = typeAccount;
+    this.name = name;
     this.phone = phone;
     this.cnpj = cpnj;
   }
 }
+
+export default User;

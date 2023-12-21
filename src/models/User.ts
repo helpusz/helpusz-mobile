@@ -18,5 +18,4 @@ class User {
     this.phone = phone;
     this.cnpj = cpnj;
   }
-
 }

@@ -9,6 +9,7 @@ import TypeAccountEnum from '../models/TypeAccountEnum';
 
 const LoginScreen: React.FC = () => {
   const handleLogin = async () => {
+    // O typeAccount ainda está sendo passado hardcoded
     const user = new User(email, password, TypeAccountEnum.VOLUNTEER);
 
     try {

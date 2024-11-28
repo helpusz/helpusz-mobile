@@ -3,5 +3,5 @@ import LoginScreen from "./LoginScreen";
 
 export {
   WelcomeScreen,
-  LoginScreen
+  LoginScreen,
 }

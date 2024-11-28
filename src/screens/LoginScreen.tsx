@@ -7,7 +7,7 @@ import Button from '../components/Button';
 import User from '../models/User';
 import TypeAccountEnum from '../models/TypeAccountEnum';
 
-const LoginScreen: React.FC = () => {
+const LoginScreen: React.FC = ({ navigation }) => {
   const handleLogin = async () => {
     // O typeAccount ainda está sendo passado hardcoded
     const user = new User(email, password, TypeAccountEnum.VOLUNTEER);
@@ -24,6 +24,9 @@ const LoginScreen: React.FC = () => {
       await AsyncStorage.setItem('authToken', token);
   
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      navigation.navigate('HomeScreen');
+      
     } 
     catch(error) {
       console.error('Erro no login:', error);
@@ -43,7 +46,7 @@ const LoginScreen: React.FC = () => {
     catch(error) {
       console.error('Erro na requisição:', error);
     }
-    };
+  };
 
 
   const [email, setEmail] = useState('');
@@ -55,7 +58,7 @@ const LoginScreen: React.FC = () => {
       <Text>Resposta do Ping: {pingResponse}</Text>
 
       <View style={styles.inputs}>
-        <Input placeholder="Email"  onChange={(value) => setEmail(value)} />
+        <Input placeholder="Email" onChange={(value) => setEmail(value)} />
         <Input placeholder="Senha" secureTextEntry={true} onChange={(value) => setPassword(value)} />
       </View>
 

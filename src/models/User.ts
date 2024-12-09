@@ -13,7 +13,7 @@ class User {
   // Ong
   public cnpj?: string;
 
-  constructor(email: string, password: string, typeAccount: TypeAccountEnum, name?: string, phone?: string, cpnj?: string) {
+  constructor(email: string, password: string, typeAccount?: TypeAccountEnum, name?: string, phone?: string, cpnj?: string) {
     this.email = email;
     this.password = password;
     this.typeAccount = typeAccount;

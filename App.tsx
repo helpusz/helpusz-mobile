@@ -5,6 +5,7 @@ import { StatusBar } from 'react-native';
 import { WelcomeScreen, LoginScreen } from './src/screens';
 import SignupScreen from './src/screens/SignupScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import ActivityScreen from './src/screens/ActivityScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ const App: React.FC = () => {
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="SignupScreen" component={SignupScreen} />
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="ActivityScreen" component={ActivityScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

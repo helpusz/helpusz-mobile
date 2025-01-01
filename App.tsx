@@ -21,6 +21,7 @@ const App: React.FC = () => {
         initialRouteName="WelcomeScreen"
         screenOptions={{
           headerShown: false,
+          animation: 'none',
         }}
       >
         <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />

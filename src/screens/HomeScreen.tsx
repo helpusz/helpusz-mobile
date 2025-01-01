@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BottomNavigation from '../components/BottomNavigation';
+import { handleTabNavigation } from '../utils/navigateUtil';
 
 interface Activity {
   id: string;
@@ -21,15 +23,14 @@ const HomeScreen: React.FC = ({ navigation }) => {
     try {
       const response = await api.get('/activity/getAll');
       setActivities(response.data);
-    } 
-    catch(error) {
+    } catch(error) {
       console.error('Erro na requisição:', error);
     }
   };
 
   const getStorageUser = async () => {
     const userData = await AsyncStorage.getItem('user');
-    if(userData) {
+    if (userData) {
       const user = JSON.parse(userData);
       setUser(user);
     }
@@ -40,26 +41,34 @@ const HomeScreen: React.FC = ({ navigation }) => {
     getStorageUser();
   }, []);
 
+  const handleTabPress = (tabName: string) => {
+    handleTabNavigation(tabName, navigation);
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.greeting}>Olá {user?.name}</Text>
-      <FlatList
-        data={activities}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => navigation.navigate('ActivityScreen', { activityId: item.id })}
-          >
-            <Image source={{ uri: item.imageURL }} style={styles.image} />
-            <View style={styles.cardContent}>
-              <Text style={styles.title}>{item.name}</Text>
-              <Text style={styles.description}>{item.description}</Text>
-              <Text style={styles.location}>{item.location}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+      <View style={styles.content}>
+        <Text style={styles.greeting}>Olá {user?.name}</Text>
+        <FlatList
+          data={activities}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() => navigation.navigate('ActivityScreen', { activityId: item.id })}
+            >
+              <Image source={{ uri: item.imageURL }} style={styles.image} />
+              <View style={styles.cardContent}>
+                <Text style={styles.title}>{item.name}</Text>
+                <Text style={styles.description}>{item.description}</Text>
+                <Text style={styles.location}>{item.location}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+
+      <BottomNavigation onTabPress={handleTabPress} />
     </View>
   );
 };
@@ -67,8 +76,11 @@ const HomeScreen: React.FC = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: '#f8f8f8',
+  },
+  content: {
+    flex: 1,
+    padding: 20,
   },
   greeting: {
     fontSize: 18,

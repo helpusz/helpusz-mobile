@@ -7,10 +7,9 @@ import Button from '../components/Button';
 import User from '../models/User';
 import TypeAccountEnum from '../models/TypeAccountEnum';
 
-const LoginScreen: React.FC = () => {
+const LoginScreen: React.FC = ({ navigation }) => {
   const handleLogin = async () => {
-    // O typeAccount ainda está sendo passado hardcoded
-    const user = new User(email, password, TypeAccountEnum.VOLUNTEER);
+    const user = new User(email, password);
 
     try {
       console.log(JSON.stringify(user));
@@ -18,12 +17,14 @@ const LoginScreen: React.FC = () => {
       
       const token = response.data;
 
-      // console.log('Resposta do login:', response);
       console.log('Token LoginScreen:', token);  
   
       await AsyncStorage.setItem('authToken', token);
   
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      navigation.navigate('HomeScreen');
+      
     } 
     catch(error) {
       console.error('Erro no login:', error);
@@ -31,38 +32,18 @@ const LoginScreen: React.FC = () => {
 
   };
   
-  const [pingResponse, setPingResponse] = useState<string | null>(null);
-
-  const fetchData = async () => {
-    try {
-      const response = await api.get('/user/ping');
-      const responseData = response.data;
-      console.log(responseData);
-      setPingResponse(responseData.message);
-    } 
-    catch(error) {
-      console.error('Erro na requisição:', error);
-    }
-    };
-
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
     
   return(
     <View style={styles.container}>
-      <Text>Luchkasz</Text>
-      <Text>Resposta do Ping: {pingResponse}</Text>
-
       <View style={styles.inputs}>
-        <Input placeholder="Email"  onChange={(value) => setEmail(value)} />
+        <Input placeholder="Email" onChange={(value) => setEmail(value)} />
         <Input placeholder="Senha" secureTextEntry={true} onChange={(value) => setPassword(value)} />
       </View>
 
       <View style={styles.button}>
         <Button title="Login" onPress={handleLogin} />
-
-        <Button title="Ping" onPress={fetchData} />
       </View>
 
     </View>

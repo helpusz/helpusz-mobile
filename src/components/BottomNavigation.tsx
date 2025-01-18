@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 import COLORS from '../constants/colors';
 
 interface BottomNavigationProps {
@@ -8,13 +9,20 @@ interface BottomNavigationProps {
 }
 
 const BottomNavigation: React.FC<BottomNavigationProps> = ({ onTabPress }) => {
+  const [activeTab, setActiveTab] = useState('Início');
+  
   const tabs = [
-    { name: 'Início', icon: 'home-outline' },
-    { name: 'Busca', icon: 'search-outline' },
-    { name: 'Postar', icon: 'add-circle-outline' },
-    { name: 'Mensagens', icon: 'chatbubbles-outline' },
-    { name: 'Perfil', icon: 'person-outline' },
+    { name: 'Início', icon: 'home-outline', iconActive: 'home' },
+    { name: 'Busca', icon: 'search-outline', iconActive: 'search' },
+    { name: 'Postar', icon: 'add-circle-outline', iconActive: 'add-circle' },
+    { name: 'Mensagens', icon: 'chatbubbles-outline', iconActive: 'chatbubbles' },
+    { name: 'Perfil', icon: 'person-outline', iconActive: 'person' },
   ];
+
+  const handleTabPress = (tabName: string) => {
+    setActiveTab(tabName);
+    onTabPress(tabName); 
+  };
 
   return (
     <View style={styles.container}>
@@ -22,9 +30,13 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onTabPress }) => {
         <TouchableOpacity
           key={tab.name}
           style={styles.tabButton}
-          onPress={() => onTabPress(tab.name)}
+          onPress={() => handleTabPress(tab.name)}
         >
-          <Icon name={tab.icon} size={24} color={COLORS.black} />
+          <Icon
+            name={tab.name === activeTab ? tab.iconActive : tab.icon}
+            size={24}
+            color={tab.name === activeTab ? COLORS.primary : COLORS.black}
+          />
         </TouchableOpacity>
       ))}
     </View>

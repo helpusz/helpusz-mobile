@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { NavigationProp, useRoute } from '@react-navigation/native';
 import { handleTabNavigation } from '../utils/navigateUtil';
 import BottomNavigation from './BottomNavigation';
+import COLORS from '../constants/colors';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,8 +16,8 @@ const Layout: React.FC<LayoutProps> = ({ children, navigation }) => {
   const isBottomNavigationVisible = !noBottomNavigationScreens.includes(route.name);
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
+    <View style={styles.container}>
+      <View style={styles.childrenContainer}>r
         {children}
       </View>
       
@@ -26,5 +27,17 @@ const Layout: React.FC<LayoutProps> = ({ children, navigation }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: COLORS.white,
+  },
+  
+  childrenContainer: {
+    flex: 1,
+  },
+});
 
 export default Layout;

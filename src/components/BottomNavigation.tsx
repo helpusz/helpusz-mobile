@@ -11,8 +11,8 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onTabPress }) => {
   const tabs = [
     { name: 'Início', icon: 'home-outline' },
     { name: 'Busca', icon: 'search-outline' },
-    { name: 'Postar', icon: 'add-outline' },
-    { name: 'Mensagens', icon: 'chatbubble-ellipses-outline' },
+    { name: 'Postar', icon: 'add-circle-outline' },
+    { name: 'Mensagens', icon: 'chatbubbles-outline' },
     { name: 'Perfil', icon: 'person-outline' },
   ];
 

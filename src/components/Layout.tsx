@@ -37,8 +37,9 @@ const styles = StyleSheet.create({
   
   childrenContainer: {
     flex: 1,
-    alignContent: 'space-around',
-    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
   },
 });
 

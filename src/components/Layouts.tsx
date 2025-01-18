@@ -10,7 +10,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, navigation }) => {
-  const noBottomNavigationScreens = ['LoginScreen', 'SignupScreen'];
+  const noBottomNavigationScreens = ['WelcomeScreen', 'LoginScreen', 'SignupScreen'];
   const route = useRoute();
   const isBottomNavigationVisible = !noBottomNavigationScreens.includes(route.name);
 

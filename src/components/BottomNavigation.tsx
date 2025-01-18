@@ -46,7 +46,8 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onTabPress }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    justifyContent: 'space-around',
     paddingVertical: 2,
   },
 

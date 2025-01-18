@@ -39,7 +39,6 @@ const Layout: React.FC<LayoutProps> = ({ children, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: COLORS.white,
   },
   

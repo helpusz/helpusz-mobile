@@ -25,7 +25,7 @@ const Layout: React.FC<LayoutProps> = ({ children, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.childrenContainer}>r
+      <View style={styles.childrenContainer}>
         {children}
       </View>
       

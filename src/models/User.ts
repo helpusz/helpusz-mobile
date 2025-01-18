@@ -1,4 +1,4 @@
-import TypeAccountEnum from "./TypeAccountEnum";
+import TypeAccountEnum from "../utils/TypeAccountEnum";
 
 class User {
   public email: string;

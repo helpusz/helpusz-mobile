@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import User from '../models/User';
-import TypeAccountEnum from '../models/TypeAccountEnum';
+import TypeAccountEnum from '../utils/TypeAccountEnum';
 
 const LoginScreen: React.FC = ({ navigation }) => {
   const handleLogin = async () => {

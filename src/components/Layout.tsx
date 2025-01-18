@@ -24,22 +24,28 @@ const Layout: React.FC<LayoutProps> = ({ children, navigation }) => {
   const isBottomNavigationVisible = !noBottomNavigationScreens.includes(route.name);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.childrenContainer}>
-        {children}
+    <>
+      <View style={styles.container}>
+        <View style={styles.childrenContainer}>
+          {children}
+        </View>
+      </View>
+
+      <View style={styles.bottomNavigation}>
+        {isBottomNavigationVisible && (
+          <BottomNavigation onTabPress={(tabName) => handleTabNavigation(tabName, navigation)} />
+        )}
       </View>
       
-      {isBottomNavigationVisible && (
-        <BottomNavigation onTabPress={(tabName) => handleTabNavigation(tabName, navigation)} />
-      )}
-    </View>
+    </>
   );
-};
+};  
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
+    padding: 20,
   },
   
   childrenContainer: {
@@ -47,6 +53,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
     textAlign: 'center',
+  },
+
+  bottomNavigation: {
+    backgroundColor: COLORS.white,
   },
 });
 

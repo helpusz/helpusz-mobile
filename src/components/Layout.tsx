@@ -2,6 +2,8 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { NavigationProp, useRoute } from '@react-navigation/native';
 import { handleTabNavigation } from '../utils/navigateUtil';
+import { useFonts } from 'expo-font';
+
 import BottomNavigation from './BottomNavigation';
 import COLORS from '../constants/colors';
 
@@ -11,6 +13,12 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, navigation }) => {
+  const [] = useFonts({
+    'Casual': require('../assets/fonts/Casual-Regular.ttf'),
+    'Godber': require('../assets/fonts/godber-3lxoz.ttf'),
+    'Walkist': require('../assets/fonts/Walkist-BF67853d4a94629.ttf'),
+  });
+
   const noBottomNavigationScreens = ['WelcomeScreen', 'LoginScreen', 'SignupScreen'];
   const route = useRoute();
   const isBottomNavigationVisible = !noBottomNavigationScreens.includes(route.name);

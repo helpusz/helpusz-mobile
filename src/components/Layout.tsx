@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   childrenContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     textAlign: 'center',
   },
 });

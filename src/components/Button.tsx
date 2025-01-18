@@ -23,15 +23,13 @@ const Button: React.FC<ButtonProps> = (props) => {
 
 const styles = StyleSheet.create({
   button: {
-    paddingBottom: 16,
-    paddingVertical: 10,
-    borderColor: COLORS.primary,
+    paddingBottom: 14,
+    paddingVertical: 14,
     backgroundColor: COLORS.primary,
-    borderWidth: 2,
-    borderRadius: 12,
+    borderRadius: 8,
     alignItems: 'center',
-    justifyContent: 'center',
   },
+
   placeholder: {
     fontSize: 17,
     color: COLORS.white,

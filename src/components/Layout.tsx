@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
     padding: 20,
+    paddingBottom: 0,
   },
   
   childrenContainer: {

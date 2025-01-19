@@ -1,32 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import BottomNavigation from '../components/BottomNavigation';
-import { handleTabNavigation } from '../utils/navigateUtil';
+import Layout from '../components/Layout';
+import CategoryCard from '../components/CategoryCard';
+import COLORS from '../constants/colors';
+import OngCategoryEnum from '../utils/OngCategoryEnum';
 
-interface Activity {
-  id: string;
-  name: string;
-  description: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  imageURL: string;
-}
-
-const HomeScreen: React.FC = ({ navigation }) => {
+const HomeScreen = ({ navigation }: any) => {
+  useEffect(() => {
+    getStorageUser();
+    getActivities();
+  }, []);
+  
+  /* User */
   const [user, setUser] = useState<{ name: string }>();
-  const [activities, setActivities] = useState<Activity[]>([]);
-
-  const getActivities = async () => {
-    try {
-      const response = await api.get('/activity/getAll');
-      setActivities(response.data);
-    } catch(error) {
-      console.error('Erro na requisição:', error);
-    }
-  };
 
   const getStorageUser = async () => {
     const userData = await AsyncStorage.getItem('user');
@@ -36,84 +24,111 @@ const HomeScreen: React.FC = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    getActivities();
-    getStorageUser();
-  }, []);
+  /* Tabs */
+  const [activeTab, setActiveTab] = useState('Activities');
+  
+  /* Categories */
+  const categories = Object.keys(OngCategoryEnum) as (keyof typeof OngCategoryEnum)[];
 
-  const handleTabPress = (tabName: string) => {
-    handleTabNavigation(tabName, navigation);
+  const renderCategory = ({ item }: { item: keyof typeof OngCategoryEnum }) => (
+    <CategoryCard
+      title={OngCategoryEnum[item]}
+      onPress={() => handleCategoryPress(item)}
+    />
+  );
+
+  const handleCategoryPress = async (category: keyof typeof OngCategoryEnum) => {
+    const response = await api.get(`/ong/getAllByCategory?category=${category}`);
+    console.log(response.data);
   };
 
+  /* Activities */
+  const getActivities = async () => {
+    try {
+      const response = await api.get('/activity/getAll');
+    } 
+    catch (error) {
+      console.error('Erro na requisição:', error);
+    }
+  };
+
+  /* Ongs */
+
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.greeting}>Olá {user?.name}</Text>
+    <Layout navigation={navigation}>
+      <View style={styles.tabContainer}>
+        <TouchableOpacity onPress={() => setActiveTab('Activities')}>
+          <Text style={[styles.tabText, activeTab === 'Activities' && styles.activeTabText]}>
+            Atividades
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setActiveTab('Ongs')}>
+          <Text style={[styles.tabText, activeTab === 'Ongs' && styles.activeTabText]}>
+            Ongs
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.categoriesListContainer}>
         <FlatList
-          data={activities}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.card}
-              onPress={() => navigation.navigate('ActivityScreen', { activityId: item.id })}
-            >
-              <Image source={{ uri: item.imageURL }} style={styles.image} />
-              <View style={styles.cardContent}>
-                <Text style={styles.title}>{item.name}</Text>
-                <Text style={styles.description}>{item.description}</Text>
-                <Text style={styles.location}>{item.location}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
+          data={categories}
+          renderItem={renderCategory}
+          keyExtractor={(item) => item}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
       </View>
 
-      <BottomNavigation onTabPress={handleTabPress} />
-    </View>
+      <View>
+        {activeTab === 'Activities' && (
+          <View>
+            <Text>Atividades</Text>
+          </View>
+        )}
+
+        {activeTab === 'Ongs' && (
+          <Text>
+            Ongs
+          </Text>
+        )}
+      </View>
+    </Layout>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8f8f8',
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  greeting: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  card: {
+  tabContainer: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    marginBottom: 10,
-    borderRadius: 8,
-    overflow: 'hidden',
-    elevation: 3,
+    gap: 20,
+    position: 'absolute',
+    top: 20,
+    width: '100%',
+    justifyContent: 'center',
   },
-  image: {
-    width: 80,
-    height: 80,
-  },
-  cardContent: {
-    flex: 1,
-    padding: 10,
-  },
-  title: {
+
+  tabText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '500',
+    color: COLORS.black,
+    minWidth: 100,
+    padding: 10,
+    textAlign: 'center',
   },
-  description: {
-    fontSize: 14,
-    color: '#555',
+
+  activeTabText: {
+    color: COLORS.primary,
   },
-  location: {
-    fontSize: 12,
-    color: '#888',
+
+  categoriesListContainer: {
+    width: '100%',
+    paddingVertical: 10,
   },
+
+  separator: {
+    width: 10,
+  }
 });
 
 export default HomeScreen;

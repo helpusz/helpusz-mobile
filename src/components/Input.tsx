@@ -1,10 +1,11 @@
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, KeyboardTypeOptions } from "react-native";
 import COLORS from "../constants/colors";
 
 interface InputProps {
   placeholder: string;
   onChange: (value: string) => void;
   secureTextEntry?: boolean;
+  keyboardType?: KeyboardTypeOptions;
 }
 
 const Input: React.FC<InputProps> = (props) => {
@@ -15,6 +16,7 @@ const Input: React.FC<InputProps> = (props) => {
         placeholder={props.placeholder}
         onChangeText={props.onChange}
         secureTextEntry={props.secureTextEntry}
+        keyboardType={props.keyboardType}
       >
       </TextInput>
     </View>
@@ -25,16 +27,16 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
   },
+
   input: {
-    borderColor: COLORS.primary,
-    borderWidth: 2,
-    borderRadius: 4,
-    width: '80%',
-    height: 40,
-    textAlign: 'center',
+    borderRadius: 8,
+    width: '100%',
+    padding: 10,
     fontSize: 17,
+    backgroundColor: COLORS.secondary,
+    color: COLORS.primary,
+    fontWeight: '700',
   },
 });
 

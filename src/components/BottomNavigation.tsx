@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 import COLORS from '../constants/colors';
 
 interface BottomNavigationProps {
@@ -8,13 +9,20 @@ interface BottomNavigationProps {
 }
 
 const BottomNavigation: React.FC<BottomNavigationProps> = ({ onTabPress }) => {
+  const [activeTab, setActiveTab] = useState('Início');
+  
   const tabs = [
-    { name: 'Início', icon: 'home-outline' },
-    { name: 'Busca', icon: 'search-outline' },
-    { name: 'Postar', icon: 'add-outline' },
-    { name: 'Mensagens', icon: 'chatbubble-ellipses-outline' },
-    { name: 'Perfil', icon: 'person-outline' },
+    { name: 'Início', icon: 'home-outline', iconActive: 'home' },
+    { name: 'Busca', icon: 'search-outline', iconActive: 'search' },
+    { name: 'Postar', icon: 'add-circle-outline', iconActive: 'add-circle' },
+    { name: 'Mensagens', icon: 'chatbubbles-outline', iconActive: 'chatbubbles' },
+    { name: 'Perfil', icon: 'person-outline', iconActive: 'person' },
   ];
+
+  const handleTabPress = (tabName: string) => {
+    setActiveTab(tabName);
+    onTabPress(tabName); 
+  };
 
   return (
     <View style={styles.container}>
@@ -22,10 +30,13 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onTabPress }) => {
         <TouchableOpacity
           key={tab.name}
           style={styles.tabButton}
-          onPress={() => onTabPress(tab.name)}
+          onPress={() => handleTabPress(tab.name)}
         >
-          <Icon name={tab.icon} size={24} color={COLORS.black} />
-          <Text style={styles.tabText}>{tab.name}</Text>
+          <Icon
+            name={tab.name === activeTab ? tab.iconActive : tab.icon}
+            size={24}
+            color={tab.name === activeTab ? COLORS.primary : COLORS.black}
+          />
         </TouchableOpacity>
       ))}
     </View>
@@ -35,25 +46,16 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onTabPress }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: COLORS.white,
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.black,
+    justifyContent: 'space-around',
+    paddingVertical: 2,
   },
+
   tabButton: {
-    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     width: 70,
     height: 40,
-  },
-  tabText: {
-    fontSize: 12,
-    color: COLORS.black,
-    marginTop: 4,
-    textAlign: 'center',
   },
 });
 

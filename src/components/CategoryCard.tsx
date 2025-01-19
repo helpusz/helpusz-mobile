@@ -2,16 +2,16 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 import COLORS from '../constants/colors';
 
-interface ButtonProps {
+interface CategoryCardProps {
   title: string;
   onPress: () => void;
 }
 
-const Button: React.FC<ButtonProps> = (props) => {
+const CategoryCard: React.FC<CategoryCardProps> = (props) => {
 
   return (
     <TouchableOpacity
-      style={styles.button}
+      style={styles.card}
       onPress={props.onPress}
     >
       <Text style={styles.placeholder}>
@@ -22,18 +22,22 @@ const Button: React.FC<ButtonProps> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  button: {
-    paddingBottom: 14,
+  card: {
     paddingVertical: 14,
     backgroundColor: COLORS.primary,
     borderRadius: 8,
     alignItems: 'center',
+    minWidth: 120,
+    maxWidth: 120,
+    justifyContent: 'center',
   },
 
   placeholder: {
-    fontSize: 17,
     color: COLORS.white,
+    textAlign: 'center',
+    flexWrap: 'wrap',
+    width: '100%',
   }
 });
 
-export default Button;
+export default CategoryCard;

@@ -1,80 +1,59 @@
-import { View, Text, StyleSheet, Image, StatusBar } from 'react-native';
 import React from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Text, StyleSheet, Image } from 'react-native';
+
 import COLORS from '../constants/colors';
 import Button from '../components/Button';
+import Layout from '../components/Layout';
 
-
-const WelcomeScreen = ({ navigation }) => {
+const WelcomeScreen = ({ navigation }: any) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>helpusz</Text>
+    <Layout navigation={navigation}>
+      <Text style={styles.title}>Helpusz</Text>
 
-      <View style={styles.imageContainer}>
-        {/* Mudar para SVG */}
-        <Image source={require('../assets/images/love.png')} style={{ width: '65%', height: '65%' }} />
-      </View>
-      
-      <View style={styles.buttons}>
+      <Image source={require('../assets/images/love.png')} style={styles.image} />
+
+      <View style={styles.actions}>
         <Button
           title="Criar conta"
-          onPress={() => {
-            navigation.navigate('SignupScreen');
-          }}
+          onPress={() => navigation.navigate('SignupScreen')}
         />
-        <View>
-          <Text style={styles.buttonsText}>
-            Já tem uma conta?
-          </Text>
-          <Text onPress={() => navigation.navigate('LoginScreen')} style={{...styles.buttonsText, ...styles.accentText}}>
+
+        <View style={styles.actionsAlreadyHaveAccount}>
+          <Text>Já tem uma conta?</Text>
+          <Text style={styles.loginText} onPress={() => navigation.navigate('LoginScreen')}>
             Login
           </Text>
         </View>
       </View>
-    </View>
+    </Layout>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.white,
-    paddingHorizontal: 22,
-    justifyContent: "space-around",
-    alignContent: "center",
-
-  },
   title: {
-    fontSize: 50,
-    fontWeight: "800",
+    fontFamily: "Casual",
+    textTransform: "lowercase",
+    fontSize: 82,
     color: COLORS.primary,
-    alignSelf: "center",
   },
-  imageContainer: {
-    alignItems: "center",
-    justifyContent: "center",
+
+  image: {
+    width: '65%',
+    height: '65%',
   },
-  subtitleContainer: {
-    marginVertical: 22,
+
+  actions: {
+    width: '100%',
   },
-  subtitle: {
-    fontSize: 20,
-    color: COLORS.white,
+
+  actionsAlreadyHaveAccount: {
+    marginTop: 8,
+    alignItems: 'center',
   },
-  button: {
-    backgroundColor: COLORS.primary,
-  },
-  buttons: {
-    flexDirection: "column",
-    justifyContent: "center",
-    gap: 20,
-  },
-  buttonsText: {
-    textAlign: "center",
-  },
-  accentText: {
+
+  loginText: {
     color: COLORS.primary,
-    fontWeight: "700",
+    fontWeight: '700',
   },
 });
 

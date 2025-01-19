@@ -1,31 +1,19 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
-import BottomNavigation from '../components/BottomNavigation';
-import { handleTabNavigation } from '../utils/navigateUtil';
+import Layout from '../components/Layout';
 
 const ProfileScreen = ({ navigation }: any) => {
-  const handleTabPress = (tabName: string) => {
-    handleTabNavigation(tabName, navigation);
-  };
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>ProfileScreen</Text>
-      <BottomNavigation onTabPress={handleTabPress} />
-    </View>
+    <Layout navigation={navigation}>
+      <Text>
+        ProfileScreen
+      </Text>
+    </Layout>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  text: {
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    flex: 1,
-  },
+
 });
 
 export default ProfileScreen;

@@ -30,7 +30,11 @@ const App: React.FC = () => {
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />
         <Stack.Screen name="SignupScreen" component={SignupScreen} />
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="HomeScreen" component={HomeScreen} 
+          options={{
+            gestureEnabled: false,
+          }} 
+        />
         <Stack.Screen name="ActivityScreen" component={ActivityScreen} />
         <Stack.Screen name="SearchScreen" component={SearchScreen} />
         <Stack.Screen name="ChatScreen" component={ChatScreen} />

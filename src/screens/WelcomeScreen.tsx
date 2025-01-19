@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     textTransform: "lowercase",
     fontSize: 82,
     color: COLORS.primary,
+    textAlign: 'center',
   },
 
   image: {

@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Layout from '../components/Layout';
 import CategoryCard from '../components/CategoryCard';
 import COLORS from '../constants/colors';
 import OngCategoryEnum from '../utils/OngCategoryEnum';
+import { Activity } from '../models/Activity';
+import ActivityCard from '../components/ActivityCard';
 
 const HomeScreen = ({ navigation }: any) => {
   useEffect(() => {
@@ -34,6 +36,7 @@ const HomeScreen = ({ navigation }: any) => {
     <CategoryCard
       title={OngCategoryEnum[item]}
       onPress={() => handleCategoryPress(item)}
+      image={require('../assets/images/image-not-found.png')}
     />
   );
 
@@ -43,14 +46,32 @@ const HomeScreen = ({ navigation }: any) => {
   };
 
   /* Activities */
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  
   const getActivities = async () => {
     try {
       const response = await api.get('/activity/getAll');
+      setActivities(response.data);
     } 
     catch (error) {
       console.error('Erro na requisição:', error);
     }
   };
+
+  const renderActivity = ({ item }: { item: Activity }) => (
+    <ActivityCard activity={item} onPress={() => handleActivityPress(item.id)} />
+  );
+
+  const handleActivityPress = (activityId: string) => {
+    console.log(activityId);
+  };
+
+  const handleRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    getActivities()
+      .finally(() => setIsRefreshing(false));
+  }, []);
 
   /* Ongs */
 
@@ -65,7 +86,7 @@ const HomeScreen = ({ navigation }: any) => {
 
         <TouchableOpacity onPress={() => setActiveTab('Ongs')}>
           <Text style={[styles.tabText, activeTab === 'Ongs' && styles.activeTabText]}>
-            Ongs
+            Fundações
           </Text>
         </TouchableOpacity>
       </View>
@@ -81,11 +102,20 @@ const HomeScreen = ({ navigation }: any) => {
         />
       </View>
 
-      <View>
+      <View style={styles.activitiesAndOngsContainer}>
         {activeTab === 'Activities' && (
-          <View>
-            <Text>Atividades</Text>
-          </View>
+          <FlatList
+            data={activities}
+            keyExtractor={(item) => item.id}
+            renderItem={renderActivity}
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={handleRefresh}
+              />
+            }
+          />
         )}
 
         {activeTab === 'Ongs' && (
@@ -123,11 +153,18 @@ const styles = StyleSheet.create({
 
   categoriesListContainer: {
     width: '100%',
-    paddingVertical: 10,
+    maxHeight: 120,
+    marginTop: 80,
+    marginBottom: 9,
   },
 
   separator: {
     width: 10,
+  },
+
+  activitiesAndOngsContainer: {
+    width: '100%',
+    marginBottom: 200,
   }
 });
 

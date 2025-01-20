@@ -262,7 +262,6 @@ const styles = StyleSheet.create({
   activitiesAndOngsContainer: {
     width: '100%',
     marginBottom: 200,
-    height: '100%',
   },
 
   nullText: {

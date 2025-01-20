@@ -6,18 +6,30 @@ interface CategoryCardProps {
   title: string;
   onPress: () => void;
   image: any;
+  isSelected: boolean;
 }
 
-const CategoryCard: React.FC<CategoryCardProps> = (props) => {
+const CategoryCard: React.FC<CategoryCardProps> = ({ title, onPress, image, isSelected }) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={props.onPress}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={onPress}
+    >
       <View style={styles.imageContainer}>
-        <Image source={props.image} style={styles.image} resizeMode="contain" />
+        <Image source={image} style={styles.image} resizeMode="contain" />
       </View>
-      <Text style={styles.title}>{props.title}</Text>
+      <Text
+        style={[
+          styles.title,
+          isSelected && styles.selectedCard
+        ]}
+      >
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };
+
 
 const styles = StyleSheet.create({
   card: {
@@ -25,6 +37,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minWidth: 100,
     maxWidth: 100,
+  },
+
+  selectedCard: {
+    color: COLORS.primary,
   },
 
   imageContainer: {

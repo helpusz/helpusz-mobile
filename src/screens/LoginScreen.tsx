@@ -4,18 +4,22 @@ import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import User from '../models/User';
 import Layout from '../components/Layout';
 import COLORS from '../constants/colors';
+import { User } from '../models/User';
 
 const LoginScreen: React.FC = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
   const handleLogin = async () => {
-    const user = new User(email, password);
+    const user: User = {
+      email,
+      password,
+    }
 
     try {
+      console.log(user);
       const response = await api.post('/user/getToken', user);
       
       const token = response.data;

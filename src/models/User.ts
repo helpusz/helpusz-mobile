@@ -1,26 +1,19 @@
 import TypeAccountEnum from "../utils/TypeAccountEnum";
+import OngCategoryEnum from "../utils/OngCategoryEnum";
 
-class User {
-  public email: string;
-  public password: string;
-  public typeAccount: TypeAccountEnum;
-
-  public name?: string;
+export interface User {
+  id: string;
+  name?: string;
+  email?: string;
+  password: string;
+  typeAccount?: TypeAccountEnum;
 
   // Volunteer
-  public phone?: string;
+  phone?: string;
 
   // Ong
-  public cnpj?: string;
-
-  constructor(email: string, password: string, typeAccount?: TypeAccountEnum, name?: string, phone?: string, cpnj?: string) {
-    this.email = email;
-    this.password = password;
-    this.typeAccount = typeAccount;
-    this.name = name;
-    this.phone = phone;
-    this.cnpj = cpnj;
-  }
+  cnpj?: string;
+  validationCode?: string;
+  isValid?: boolean;
+  category?: OngCategoryEnum;
 }
-
-export default User;

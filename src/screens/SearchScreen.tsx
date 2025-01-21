@@ -4,6 +4,7 @@ import BottomNavigation from '../components/BottomNavigation';
 import { handleTabNavigation } from '../utils/navigateUtil';
 import OngCategoryEnum from '../utils/OngCategoryEnum';
 import api from '../api/api';
+import Layout from '../components/Layout';
 
 const SearchScreen = ({ navigation }: any) => {
   const handleTabPress = (tabName: string) => {
@@ -28,24 +29,25 @@ const SearchScreen = ({ navigation }: any) => {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Pesquisar"
-          placeholderTextColor="#999"
+    <Layout navigation={navigation}>
+      <View style={styles.container}>
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Pesquisar"
+            placeholderTextColor="#999"
+          />
+        </View>
+        <Text style={styles.filterText}>Filtre ONGs por categorias</Text>
+        <FlatList
+          data={categories}
+          renderItem={renderCategory}
+          keyExtractor={(item) => item}
+          numColumns={2}
+          contentContainerStyle={styles.categoriesContainer}
         />
       </View>
-      <Text style={styles.filterText}>Filtre ONGs por categorias</Text>
-      <FlatList
-        data={categories}
-        renderItem={renderCategory}
-        keyExtractor={(item) => item}
-        numColumns={2}
-        contentContainerStyle={styles.categoriesContainer}
-      />
-      <BottomNavigation onTabPress={handleTabPress} />
-    </View>
+    </Layout>
   );
 };
 

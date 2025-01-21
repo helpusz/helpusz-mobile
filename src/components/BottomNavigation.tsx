@@ -48,13 +48,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingVertical: 2,
   },
 
   tabButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 70,
     height: 40,
   },
 });

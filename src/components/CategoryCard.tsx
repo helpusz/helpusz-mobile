@@ -1,43 +1,65 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Image, View } from 'react-native';
 import COLORS from '../constants/colors';
 
 interface CategoryCardProps {
   title: string;
   onPress: () => void;
+  image: any;
+  isSelected: boolean;
 }
 
-const CategoryCard: React.FC<CategoryCardProps> = (props) => {
-
+const CategoryCard: React.FC<CategoryCardProps> = ({ title, onPress, image, isSelected }) => {
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={props.onPress}
+      onPress={onPress}
     >
-      <Text style={styles.placeholder}>
-        {props.title}
+      <View style={styles.imageContainer}>
+        <Image source={image} style={styles.image} resizeMode="contain" />
+      </View>
+      <Text
+        style={[
+          styles.title,
+          isSelected && styles.selectedCard
+        ]}
+      >
+        {title}
       </Text>
     </TouchableOpacity>
   );
 };
 
+
 const styles = StyleSheet.create({
   card: {
-    paddingVertical: 14,
-    backgroundColor: COLORS.primary,
     borderRadius: 8,
     alignItems: 'center',
-    minWidth: 120,
-    maxWidth: 120,
-    justifyContent: 'center',
+    minWidth: 100,
+    maxWidth: 100,
   },
 
-  placeholder: {
-    color: COLORS.white,
-    textAlign: 'center',
-    flexWrap: 'wrap',
+  selectedCard: {
+    color: COLORS.primary,
+  },
+
+  imageContainer: {
+    width: 80,
+    height: 80,
+    marginBottom: 8,
+  },
+
+  image: {
     width: '100%',
-  }
+    height: '100%',
+  },
+
+  title: {
+    color: COLORS.black,
+    textAlign: 'center',
+    fontSize: 14,
+    flexWrap: 'wrap',
+  },
 });
 
 export default CategoryCard;

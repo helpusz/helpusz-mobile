@@ -25,6 +25,7 @@ const LoginScreen: React.FC = ({ navigation }: any) => {
       const token = response.data;
 
       await AsyncStorage.setItem('authToken', token);
+      await AsyncStorage.setItem('email', email);
   
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 

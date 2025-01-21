@@ -19,7 +19,7 @@ const HomeScreen = ({ navigation }: any) => {
     };
   
     loadSelectedCategory();
-    getStorageUser();
+    getuser();
     getActivities();
     getOngs();
   }, []);
@@ -30,18 +30,19 @@ const HomeScreen = ({ navigation }: any) => {
     setIsRefreshing(true);
     getActivities()
     getOngs()
+    getuser()
       .finally(() => setIsRefreshing(false));
   }, []);
   
   /* User */
   const [user, setUser] = useState<{ name: string }>();
 
-  const getStorageUser = async () => {
-    const userData = await AsyncStorage.getItem('user');
-    if(userData) {
-      const user = JSON.parse(userData);
-      setUser(user);
-    }
+  const getuser = async () => {
+    const email = await AsyncStorage.getItem('email');
+    
+    const response = await api.get(`/user/getByEmail?email=${email}`);
+    setUser(response.data);
+    await AsyncStorage.setItem('user', JSON.stringify(response.data));
   };
   /* User */
 

@@ -1,169 +1,208 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Button, Alert } from 'react-native';
-import api from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react';
+import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-interface Activity {
-  id: string;
-  ongId: string;
-  name: string;
-  description: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  limitInscriptionDate: string;
-  quantityVolunteersAvailable: number;
-  volunteers: string[];
-  actitivityStatusEnum: string;
-  activityVisibilityEnum: string;
-  tags: string[];
-  imageURL: string;
-}
+import api from '../api/api';
+import Button from '../components/Button';
+import Layout from '../components/Layout';
+import COLORS from '../constants/colors';
+import { Activity } from '../models/Activity';
+import { User } from '../models/User';
 
-const ActivityScreen: React.FC = ({ route }) => {
+const ActivityScreen = ({ route, navigation }: any) => {
   const { activityId } = route.params;
-  const [activity, setActivity] = useState<Activity | null>(null);
+  
+  /* User */
   const [user, setUser] = useState<{ id: string; name: string } | null>(null);
+
+  const getStorageUser = async () => {
+    const userData = await AsyncStorage.getItem('user');
+    if(userData) {
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+    }
+  };
+  /* User */
+
+  /* Activity */
+  const [activity, setActivity] = useState<Activity | null>(null);
+  const [isEnrolled, setIsEnrolled] = useState(false);
 
   const getActivityDetails = async () => {
     try {
       const response = await api.get(`/activity/${activityId}`);
       setActivity(response.data);
-    } catch (error) {
+    } 
+    catch(error) {
       console.error('Erro ao carregar os detalhes da atividade:', error);
     }
   };
 
-  const getStorageUser = async () => {
-    const userData = await AsyncStorage.getItem('user');
-    if (userData) {
-      const parsedUser = JSON.parse(userData);
-      setUser(parsedUser);
-    }
-  };
-
   const handleEnterActivity = async () => {
-    if (!user || !activity) {
+    if(!user || !activity) {
       Alert.alert('Erro', 'Informações do usuário ou atividade não encontradas.');
       return;
     }
 
     try {
-      const response = await api.post('/activity/enterIntoActivity', {
+      await api.post('/activity/enterIntoActivity', {
         userId: user.id,
         activityId: activity.id,
       });
+      setIsEnrolled(true);
       Alert.alert('Sucesso', 'Inscrição feita com sucesso!');
-    } catch (error) {
+    } 
+    catch(error) {
       console.error('Erro ao se inscrever na atividade:', error);
       Alert.alert('Erro', 'Não foi possível realizar a inscrição. Tente novamente.');
     }
   };
+  /* Activity */
+
+  /* Ong */
+  const [ong, setOng] = useState<User | null>(null);
+
+  const getOng = async () => {
+    try {
+      const response = await api.get(`/ong/getById?id=${activity!.ongId}`);
+      setOng(response.data);
+    } 
+    catch(error) {
+      console.error('Erro ao carregar a ONG:', error);
+    }
+  };
+  /* Ong */
+  
+  useEffect(() => {
+    getStorageUser();
+    getActivityDetails();
+  }, []);
 
   useEffect(() => {
-    getActivityDetails();
-    getStorageUser();
-  }, [activityId]);
+    if(activity?.ongId) {
+      getOng();
+    }
+
+    if(user && activity?.volunteers?.includes(user.id)) {
+      setIsEnrolled(true);
+    } 
+    else {
+      setIsEnrolled(false);
+    }
+  }, [activity, user]);
 
   return (
-    <ScrollView style={styles.container}>
+    <Layout navigation={navigation}>
       {activity ? (
-        <>
-          <Image source={{ uri: activity.imageURL }} style={styles.image} />
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
           <Text style={styles.title}>{activity.name}</Text>
-          <Text style={styles.description}>{activity.description}</Text>
-          <Text style={styles.location}>
-            <Text style={styles.label}>Local:</Text> {activity.location}
-          </Text>
-          <Text style={styles.date}>
-            <Text style={styles.label}>Início:</Text>{' '}
-            {new Date(activity.startDate).toLocaleString()}
-          </Text>
-          <Text style={styles.date}>
-            <Text style={styles.label}>Término:</Text>{' '}
-            {new Date(activity.endDate).toLocaleString()}
-          </Text>
-          <Text style={styles.date}>
-            <Text style={styles.label}>Inscrições até:</Text>{' '}
-            {new Date(activity.limitInscriptionDate).toLocaleString()}
-          </Text>
-          <Text style={styles.volunteers}>
-            <Text style={styles.label}>Vagas disponíveis:</Text>{' '}
-            {activity.quantityVolunteersAvailable}
-          </Text>
-          <Text style={styles.status}>
-            <Text style={styles.label}>Status:</Text> {activity.actitivityStatusEnum}
-          </Text>
-          <Text style={styles.visibility}>
-            <Text style={styles.label}>Visibilidade:</Text>{' '}
-            {activity.activityVisibilityEnum}
-          </Text>
-          <View>
-            <Text style={styles.label}>Tags:</Text>
-            {activity.tags.map((tag, index) => (
-              <Text key={index}>{tag}</Text>
-            ))}
+
+          <View style={styles.who}>
+            <Text style={styles.whoText}>
+              {ong ? `${ong.name}` : 'Erro ao carregar ONG'}
+            </Text>
           </View>
-          <Button
-            title="Participar da Atividade"
-            onPress={handleEnterActivity}
-          />
-        </>
+
+          <View style={styles.when}>
+            <Text>
+              {new Date(activity.startDate).toLocaleDateString('pt-BR')} | {new Date(activity.endDate).toLocaleDateString('pt-BR')}
+            </Text>
+          </View>
+
+          <View style={styles.where}>
+            <Text>{activity.location}</Text>
+          </View>
+
+          <Image source={require('../assets/images/image-not-found.png')} style={styles.image} />
+
+          <View style={styles.card}>
+            <Text>FOTO | FOTO | FOTO</Text>
+            <Text>Xx Participantes</Text>
+          </View>
+
+          <View style={styles.card}>
+            <Text style={styles.subtitle}>Sobre:</Text>
+            <Text style={styles.description}>{activity.description}</Text>
+          </View>
+
+          <View style={styles.actions}>
+            {!isEnrolled && (
+              <Button title="Participar!" onPress={handleEnterActivity} />
+            )}
+          </View>
+        </ScrollView>
       ) : (
-        <Text style={styles.loading}>Carregando...</Text>
+        <Text>Erro ao carregar Atividade</Text>
       )}
-    </ScrollView>
+    </Layout>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#f8f8f8',
-  },
-  image: {
+    height: '100%',
     width: '100%',
-    height: 200,
-    borderRadius: 10,
-    marginBottom: 15,
   },
+  
+  contentContainer: {
+    alignItems: 'center',
+    paddingBottom: 20, 
+  },
+
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginTop: 20,
+    width: '100%',
   },
-  description: {
-    fontSize: 16,
-    marginBottom: 10,
+
+  who: {
+    marginTop: 10,
+    width: '100%',
   },
-  location: {
-    fontSize: 14,
-    marginBottom: 5,
-  },
-  date: {
-    fontSize: 14,
-    marginBottom: 5,
-  },
-  volunteers: {
-    fontSize: 14,
-    marginBottom: 5,
-  },
-  status: {
-    fontSize: 14,
-    marginBottom: 5,
-  },
-  visibility: {
-    fontSize: 14,
-    marginBottom: 5,
-  },
-  label: {
+
+  whoText: {
     fontWeight: 'bold',
   },
-  loading: {
-    fontSize: 16,
-    textAlign: 'center',
+
+  when: {
+    width: '100%',
+  },
+
+  where: {
+    width: '100%',
+  },
+
+  image: {
+    width: '100%',
+    borderRadius: 10,
     marginTop: 20,
+  },
+
+  card: {
+    width: '100%',
+    borderRadius: 10,
+    backgroundColor: COLORS.grey,
+    marginTop: 20,
+    padding: 10,
+  },
+
+  subtitle: {
+    fontSize: 14,
+    color: COLORS.black,
+    fontWeight: 'bold',
+  },
+
+  description: {
+    fontSize: 14,
+    flexWrap: 'wrap',
+    width: '100%',
+    textAlign: 'justify',
+  },
+
+  actions: {
+    width: '100%',
+    padding: 30,
   },
 });
 

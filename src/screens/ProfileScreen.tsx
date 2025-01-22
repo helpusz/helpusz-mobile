@@ -16,7 +16,7 @@ const ProfileScreen = ({ navigation }: any) => {
 
   const getStorageUser = async () => {
     const userData = await AsyncStorage.getItem("user");
-    if (userData) {
+    if(userData) {
       const user = JSON.parse(userData);
       setUser(user);
     }

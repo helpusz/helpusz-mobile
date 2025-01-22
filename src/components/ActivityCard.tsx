@@ -18,10 +18,12 @@ const ActivityCard: React.FC<ActivityCardProps> = (props) => {
         <Text style={styles.name}>
           {props.activity.name}
         </Text>
-
-        <Text style={styles.description}>
-          {props.activity.description}
-        </Text>
+        
+        <View style={styles.descriptionContainer}>
+          <Text numberOfLines={2} ellipsizeMode="tail" style={styles.description}>
+            {props.activity.description}
+          </Text>
+        </View>
         
         <View style={styles.whereAndWhenContainer}>
           <View style={styles.where}>
@@ -77,11 +79,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     color: COLORS.black,
+    padding: 2,
+  },
+
+  descriptionContainer: {
+    width: '90%',
+    flexDirection: 'row',
   },
 
   description: {
     fontSize: 14,
     color: COLORS.black,
+    width: '90%',
+    flexWrap: 'wrap',
+    padding: 2,
   },
 
   whereAndWhenContainer: {

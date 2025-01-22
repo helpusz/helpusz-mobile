@@ -54,7 +54,7 @@ const ActivityCard: React.FC<ActivityCardProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 2,
+    borderRadius: 8,
     alignItems: 'center',
     width: '100%',
     padding: 2,

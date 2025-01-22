@@ -18,22 +18,34 @@ const ActivityCard: React.FC<ActivityCardProps> = (props) => {
         <Text style={styles.name}>
           {props.activity.name}
         </Text>
-
-        <Text style={styles.description}>
-          {props.activity.description}
-        </Text>
         
-        <View style={styles.whenAndWhereContainer}>
-          <Text style={styles.location}>
-            <Icon name="pin-outline" size={14} color={COLORS.black} />
-            Paranaguá - PR
+        <View style={styles.descriptionContainer}>
+          <Text numberOfLines={2} ellipsizeMode="tail" style={styles.description}>
+            {props.activity.description}
           </Text>
+        </View>
+        
+        <View style={styles.whereAndWhenContainer}>
+          <View style={styles.where}>
+            <Text>
+              <Icon name="pin-outline" size={14} color={COLORS.black} />
+            </Text>
 
-          <Text style={styles.date}>
-            {/* {new Date(props.activity.startDate).getDate().toString().padStart(2, '0')} */}
-            <Icon name="calendar-outline" size={14} color={COLORS.black} />
-            11 de Dezembro
-          </Text>
+            <Text>
+              Paranaguá - PR
+            </Text>
+          </View>
+
+          <View style={styles.when}>
+            <Text>
+              <Icon name="calendar-outline" size={14} color={COLORS.black} /> 
+            </Text>
+
+            <Text>
+              {/* {new Date(props.activity.startDate).getDate().toString().padStart(2, '0')} */}
+              11 de Dezembro
+            </Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -42,7 +54,7 @@ const ActivityCard: React.FC<ActivityCardProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 2,
+    borderRadius: 8,
     alignItems: 'center',
     width: '100%',
     padding: 2,
@@ -67,28 +79,42 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     color: COLORS.black,
+    padding: 2,
+  },
+
+  descriptionContainer: {
+    width: '90%',
+    flexDirection: 'row',
   },
 
   description: {
     fontSize: 14,
     color: COLORS.black,
+    width: '90%',
+    flexWrap: 'wrap',
+    padding: 2,
   },
 
-  whenAndWhereContainer: {
+  whereAndWhenContainer: {
     flexDirection: 'row',
-    flex: 1,
     alignItems: 'center',
-    textAlign: 'right',
     marginTop: 10,
     gap: 10,
-    justifyContent: 'flex-start',
   },
 
-  location: {
+  where: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 2,
   },
 
-  date: {
-  }
+  when: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 2
+  },
 });
 
 export default ActivityCard;

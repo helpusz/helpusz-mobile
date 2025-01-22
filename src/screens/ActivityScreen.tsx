@@ -71,6 +71,10 @@ const ActivityScreen = ({ route, navigation }: any) => {
       console.error('Erro ao carregar a ONG:', error);
     }
   };
+
+  const handleOngPress = (ongId: string) => {
+    navigation.navigate('OngScreen', { ongId });
+  };
   /* Ong */
   
   useEffect(() => {
@@ -98,7 +102,7 @@ const ActivityScreen = ({ route, navigation }: any) => {
           <Text style={styles.title}>{activity.name}</Text>
 
           <View style={styles.who}>
-            <Text style={styles.whoText}>
+            <Text style={styles.whoText} onPress={() => handleOngPress(activity.ongId)}>
               {ong ? `${ong.name}` : 'Erro ao carregar ONG'}
             </Text>
           </View>

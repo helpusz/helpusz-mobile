@@ -19,7 +19,7 @@ const HomeScreen = ({ navigation }: any) => {
     };
   
     loadSelectedCategory();
-    getStorageUser();
+    getuser();
     getActivities();
     getOngs();
   }, []);
@@ -30,18 +30,19 @@ const HomeScreen = ({ navigation }: any) => {
     setIsRefreshing(true);
     getActivities()
     getOngs()
+    getuser()
       .finally(() => setIsRefreshing(false));
   }, []);
   
   /* User */
   const [user, setUser] = useState<{ name: string }>();
 
-  const getStorageUser = async () => {
-    const userData = await AsyncStorage.getItem('user');
-    if(userData) {
-      const user = JSON.parse(userData);
-      setUser(user);
-    }
+  const getuser = async () => {
+    const email = await AsyncStorage.getItem('email');
+    
+    const response = await api.get(`/user/getByEmail?email=${email}`);
+    setUser(response.data);
+    await AsyncStorage.setItem('user', JSON.stringify(response.data));
   };
   /* User */
 
@@ -56,16 +57,37 @@ const HomeScreen = ({ navigation }: any) => {
 
   const renderCategory = ({ item }: { item: keyof typeof OngCategoryEnum }) => {
     const isSelected = item === selectedCategory;
+    const image = categoryImages[OngCategoryEnum[item]];
+  
     return (
       <CategoryCard
         title={OngCategoryEnum[item]}
         onPress={() => handleCategoryPress(item)}
-        image={require('../assets/images/image-not-found.png')}
+        image={image}
         isSelected={isSelected}
       />
     );
   };
   
+  const categoryImages = {
+    [OngCategoryEnum.MEIO_AMBIENTE]: require('../assets/images/categories/images/MEIO_AMBIENTE.jpeg'),
+    [OngCategoryEnum.CAUSA_ANIMAL]: require('../assets/images/categories/images/CAUSA_ANIMAL.webp'),
+    [OngCategoryEnum.EDUCACAO]: require('../assets/images/categories/images/EDUCACAO.webp'), 
+    [OngCategoryEnum.CULTURA_E_ARTES]: require('../assets/images/categories/images/CULTURA_E_ARTES.jpeg'),
+    [OngCategoryEnum.ASSISTENCIA_SOCIAL]: require('../assets/images/categories/images/ASSISTENCIA_SOCIAL.jpeg'),
+    [OngCategoryEnum.DIREITOS_HUMANOS]: require('../assets/images/categories/images/DIREITOS_HUMANOS.jpeg'),
+    [OngCategoryEnum.SEGURANCA_ALIMENTAR]: require('../assets/images/categories/images/SEGURANCA_ALIMENTAR.jpeg'),
+    [OngCategoryEnum.ESPORTE_E_LAZER]: require('../assets/images/categories/images/ESPORTE_E_LAZER.jpeg'),
+    [OngCategoryEnum.TECNOLOGIA_E_INOVACAO]: require('../assets/images/categories/images/TECNOLOGIA_E_INOVACAO.jpeg'),
+    [OngCategoryEnum.DIREITOS_DOS_IDOSOS]: require('../assets/images/categories/images/DIREITOS_DOS_IDOSOS.webp'),
+    [OngCategoryEnum.IGUALDADE_RACIAL]: require('../assets/images/categories/images/IGUALDADE_RACIAL.webp'),
+    [OngCategoryEnum.DESENVOLVIMENTO_COMUNITARIO]: require('../assets/images/categories/images/DESENVOLVIMENTO_COMUNITARIO.webp'),
+    [OngCategoryEnum.IGUALDADE_DE_GENERO]: require('../assets/images/categories/images/IGUALDADE_DE_GENERO.jpeg'),
+    [OngCategoryEnum.SAUDE]: require('../assets/images/categories/images/SAUDE.webp'),
+    [OngCategoryEnum.INCLUSAO_DE_PESSOAS_COM_DEFICIENCIA]: require('../assets/images/categories/images/INCLUSAO_DE_PESSOAS_COM_DEFICIENCIA.webp'), 
+
+    
+  };
   
   const handleCategoryPress = async (category: keyof typeof OngCategoryEnum) => {
     if(category === selectedCategory) {

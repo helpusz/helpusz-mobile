@@ -85,8 +85,6 @@ const HomeScreen = ({ navigation }: any) => {
     [OngCategoryEnum.IGUALDADE_DE_GENERO]: require('../assets/images/categories/images/IGUALDADE_DE_GENERO.jpeg'),
     [OngCategoryEnum.SAUDE]: require('../assets/images/categories/images/SAUDE.webp'),
     [OngCategoryEnum.INCLUSAO_DE_PESSOAS_COM_DEFICIENCIA]: require('../assets/images/categories/images/INCLUSAO_DE_PESSOAS_COM_DEFICIENCIA.webp'), 
-
-    
   };
   
   const handleCategoryPress = async (category: keyof typeof OngCategoryEnum) => {

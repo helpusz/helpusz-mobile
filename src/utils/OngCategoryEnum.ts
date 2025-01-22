@@ -8,17 +8,12 @@ enum OngCategoryEnum {
 	CULTURA_E_ARTES = "Cultura e Artes",
 	DESENVOLVIMENTO_COMUNITARIO = "Desenvolvimento Comunitário",
 	ESPORTE_E_LAZER = "Esporte e Lazer",
-	HABITACAO = "Habitação",
 	TECNOLOGIA_E_INOVACAO = "Tecnologia e Inovação",
 	SEGURANCA_ALIMENTAR = "Segurança Alimentar",
 	IGUALDADE_RACIAL = "Igualdade Racial",
 	IGUALDADE_DE_GENERO = "Igualdade de Gênero",
-	DEFESA_DOS_DIREITOS_INFANTOJUVENIS = "Defesa dos Direitos Infantojuvenis",
 	DIREITOS_DOS_IDOSOS = "Direitos dos Idosos",
-	INCLUSAO_DE_PESSOAS_COM_DEFICIENCIA = "Inclusão de Pessoas com Deficiência",
-	PROTECAO_CIVIL = "Proteção Civil",
-	REFUGIADOS_E_MIGRANTES = "Refugiados e Migrantes",
-	JUSTICA_E_CIDADANIA = "Justiça e Cidadania"
+	INCLUSAO_DE_PESSOAS_COM_DEFICIENCIA = "Inclusão de Pessoas com Deficiência"
 }
 
 export default OngCategoryEnum;

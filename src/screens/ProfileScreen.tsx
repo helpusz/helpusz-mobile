@@ -165,7 +165,6 @@ const styles = StyleSheet.create({
   
   topBar: {
     width: "100%",
-    marginTop: 20,
     flexDirection: "row",
     justifyContent: "flex-end",
   },

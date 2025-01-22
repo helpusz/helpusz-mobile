@@ -250,7 +250,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 20,
     position: 'absolute',
-    top: 20,
     width: '100%',
     justifyContent: 'center',
   },
@@ -271,7 +270,7 @@ const styles = StyleSheet.create({
   categoriesListContainer: {
     width: '100%',
     maxHeight: 120,
-    marginTop: 80,
+    marginTop: 60,
     marginBottom: 9,
   },
 

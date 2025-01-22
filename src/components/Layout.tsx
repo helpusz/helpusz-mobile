@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
     textAlign: 'center',
+    marginTop: 20,
   },
 
   bottomNavigation: {

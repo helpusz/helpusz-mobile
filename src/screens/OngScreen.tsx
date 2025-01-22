@@ -260,13 +260,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 20,
   },
-
-  contentContainer: {
-    width: '100%',
-    height: 900,
-    marginTop: 20,
-    backgroundColor: COLORS.primary,
-  },
 });
 
 export default ProfileScreen;

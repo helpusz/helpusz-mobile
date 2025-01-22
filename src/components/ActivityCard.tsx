@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
   whereAndWhenContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
     gap: 10,
   },
 

@@ -10,6 +10,7 @@ export interface User {
   password: string;
   typeAccount?: TypeAccountEnum;
   socialLinks?: SocialLinks;
+  profilePhotoUrl?: string;
 
   // Volunteer
   phone?: string;

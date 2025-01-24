@@ -13,6 +13,7 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import PostScreen from './src/screens/PostScreen';
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
 import OngScreen from './src/screens/OngScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,6 +43,7 @@ const App: React.FC = () => {
         <Stack.Screen name="ChatScreen" component={ChatScreen} />
         <Stack.Screen name="PostScreen" component={PostScreen} />
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+        <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

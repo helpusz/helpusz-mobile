@@ -49,6 +49,12 @@ const ProfileScreen = ({ navigation }: any) => {
   };
   /* Activities */
 
+  /* Settings */
+  const openSettings = async () => {
+    navigation.navigate('SettingsScreen');
+  };
+  /* Settings */
+
   useEffect(() => {
     getStorageUser();
   }, []);
@@ -63,13 +69,13 @@ const ProfileScreen = ({ navigation }: any) => {
     <Layout navigation={navigation}>
       {user ? (
         <View style={styles.container}>
-          <View style={styles.topBar}>
-            <Icon name="settings-outline" size={24} color={COLORS.black} />
+          <View style={styles.topBar} >
+            <Icon name="settings-outline" size={24} style={styles.settingsIcon} onPress={() => openSettings()}/>
           </View>
           
           <View style={styles.mainInfo}>
             <Image
-              source={require("../assets/images/image-not-found.png")}
+              source={{ uri: user?.profilePhotoUrl || "../assets/images/image-not-found.png" }}
               style={styles.profileImage}
             />
 
@@ -169,10 +175,17 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
 
+  settingsIcon: {
+    color: COLORS.black,
+    position: "absolute",
+    padding: 10,
+  },
+
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
+    backgroundColor: COLORS.secondary,
   },
 
   name: {

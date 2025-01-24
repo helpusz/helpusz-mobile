@@ -2,23 +2,25 @@ import { View, TextInput, StyleSheet, KeyboardTypeOptions } from "react-native";
 import COLORS from "../constants/colors";
 
 interface InputProps {
-  placeholder: string;
+  placeholder?: string;
   onChange: (value: string) => void;
   secureTextEntry?: boolean;
   keyboardType?: KeyboardTypeOptions;
+  value?: string;
+  noStyle?: boolean;
 }
 
 const Input: React.FC<InputProps> = (props) => {
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.input}
+        style={props.noStyle ? {} : styles.input}
         placeholder={props.placeholder}
         onChangeText={props.onChange}
         secureTextEntry={props.secureTextEntry}
         keyboardType={props.keyboardType}
-      >
-      </TextInput>
+        value={props.value}
+      />
     </View>
   )
 }

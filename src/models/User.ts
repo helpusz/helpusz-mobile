@@ -20,4 +20,5 @@ export interface User {
   validationCode?: string;
   isValid?: boolean;
   category?: OngCategoryEnum;
+  itemsForDonation?: ItemsForDonation[];
 }

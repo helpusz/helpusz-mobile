@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
-import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { act, useEffect, useState } from 'react';
+import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import api from '../api/api';
 import Button from '../components/Button';
@@ -8,12 +8,16 @@ import Layout from '../components/Layout';
 import COLORS from '../constants/colors';
 import { Activity } from '../models/Activity';
 import { User } from '../models/User';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const ActivityScreen = ({ route, navigation }: any) => {
+  const [isLoading, setIsLoading] = useState(true);
   const { activityId } = route.params;
   
   /* User */
   const [user, setUser] = useState<{ id: string; name: string } | null>(null);
+  const [volunteers, setVolunteers] = useState<User[]>([]);
 
   const getStorageUser = async () => {
     const userData = await AsyncStorage.getItem('user');
@@ -22,6 +26,19 @@ const ActivityScreen = ({ route, navigation }: any) => {
       setUser(parsedUser);
     }
   };
+
+  const getAllVolunteers = async() => {
+    try {
+      const response = await api.get(`/user/volunteers/${activityId}`); 
+      console.log('Dados recebidos:', response.data);
+      console.log('Quantidade:', response.data.length);
+      setVolunteers(response.data);
+    } 
+    catch(error) {
+      console.error('Erro ao carregar os voluntários:', error);
+    }
+  };
+  
   /* User */
 
   /* Activity */
@@ -35,6 +52,9 @@ const ActivityScreen = ({ route, navigation }: any) => {
     } 
     catch(error) {
       console.error('Erro ao carregar os detalhes da atividade:', error);
+    }
+    finally {
+      setIsLoading(false);
     }
   };
 
@@ -80,6 +100,7 @@ const ActivityScreen = ({ route, navigation }: any) => {
   useEffect(() => {
     getStorageUser();
     getActivityDetails();
+    getAllVolunteers();
   }, []);
 
   useEffect(() => {
@@ -97,7 +118,7 @@ const ActivityScreen = ({ route, navigation }: any) => {
 
   return (
     <Layout navigation={navigation}>
-      {activity ? (
+      {activity && !isLoading ? (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
           <Text style={styles.title}>{activity.name}</Text>
 
@@ -109,19 +130,37 @@ const ActivityScreen = ({ route, navigation }: any) => {
 
           <View style={styles.when}>
             <Text>
+              <Ionicons name="calendar-outline" size={14} color={COLORS.black} />
+            </Text>
+            <Text>
               {new Date(activity.startDate).toLocaleDateString('pt-BR')} | {new Date(activity.endDate).toLocaleDateString('pt-BR')}
             </Text>
           </View>
 
           <View style={styles.where}>
+            <Text>
+              <Icon name="pin-outline" size={14} color={COLORS.black} /> 
+            </Text>
+            
             <Text>{activity.location}</Text>
           </View>
 
-          <Image source={require('../assets/images/image-not-found.png')} style={styles.image} />
+          <Image 
+            source={activity.imageURL ? { uri: activity.imageURL } : require('../assets/images/image-not-found.png')} 
+            style={styles.image} 
+          />
 
           <View style={styles.card}>
-            <Text>FOTO | FOTO | FOTO</Text>
-            <Text>Xx Participantes</Text>
+            <View style={styles.photosContainer}>
+              {volunteers.map((volunteer, index) => (
+                <Image
+                  key={index}
+                  source={{ uri: volunteer.profilePhotoUrl }}
+                  style={styles.photo}
+                />
+              ))}
+            </View>
+            <Text>{activity.volunteers?.length} Participantes</Text>
           </View>
 
           <View style={styles.card}>
@@ -169,15 +208,19 @@ const styles = StyleSheet.create({
   },
 
   when: {
+    flexDirection: 'row',
     width: '100%',
+    paddingTop: 8,
   },
 
   where: {
+    flexDirection: 'row',
     width: '100%',
   },
 
   image: {
     width: '100%',
+    height: 200, 
     borderRadius: 10,
     marginTop: 20,
   },
@@ -194,6 +237,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.black,
     fontWeight: 'bold',
+  },
+
+  photosContainer: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  
+  photo: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
 
   description: {

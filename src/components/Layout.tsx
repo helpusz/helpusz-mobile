@@ -19,7 +19,7 @@ const Layout: React.FC<LayoutProps> = ({ children, navigation }) => {
     'Walkist': require('../assets/fonts/Walkist-BF67853d4a94629.ttf'),
   });
 
-  const noBottomNavigationScreens = ['WelcomeScreen', 'LoginScreen', 'SignupScreen'];
+  const noBottomNavigationScreens = ['WelcomeScreen', 'LoginScreen', 'SignupScreen', 'SettingsScreen'];
   const route = useRoute();
   const isBottomNavigationVisible = !noBottomNavigationScreens.includes(route.name);
 
@@ -30,13 +30,12 @@ const Layout: React.FC<LayoutProps> = ({ children, navigation }) => {
           {children}
         </View>
       </View>
-
+  
       <View style={styles.bottomNavigation}>
         {isBottomNavigationVisible && (
           <BottomNavigation onTabPress={(tabName) => handleTabNavigation(tabName, navigation)} />
         )}
       </View>
-      
     </>
   );
 };  
@@ -44,9 +43,9 @@ const Layout: React.FC<LayoutProps> = ({ children, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
     padding: 20,
     paddingBottom: 0,
+    backgroundColor: COLORS.white,
   },
   
   childrenContainer: {
@@ -54,6 +53,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
     textAlign: 'center',
+    marginTop: 20,
   },
 
   bottomNavigation: {

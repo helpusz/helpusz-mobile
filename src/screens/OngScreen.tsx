@@ -1,32 +1,44 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
-import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Linking } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Layout from "../components/Layout";
+import COLORS from "../constants/colors";
+import { User } from "../models/User";
+import ActivityCard from "../components/ActivityCard";
+import { Activity } from "../models/Activity";
+import api from "../api/api";
+import * as Clipboard from 'expo-clipboard';
 
-import api from '../api/api';
-import Button from '../components/Button';
-import Layout from '../components/Layout';
-import COLORS from '../constants/colors';
-import { Activity } from '../models/Activity';
-import { User } from '../models/User';
-
-const OngScreen = ({ route, navigation }: any) => {
+const ProfileScreen = ({ route, navigation }: any) => {
   const { ongId } = route.params;
+
+  const handleCopyToClipboard = async (email: string) => {
+    try {
+      await Clipboard.setStringAsync(email);
+      Alert.alert('Chave PIX copiada!', 'Sua doação é muito importante. Obrigado pela ajuda!');
+    } 
+    catch (error) {
+      Alert.alert('Erro', 'Falha ao copiar para a área de transferência.');
+    }
+  };
   
   /* User */
-  const [user, setUser] = useState<{ id: string; name: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const getStorageUser = async () => {
-    const userData = await AsyncStorage.getItem('user');
+    const userData = await AsyncStorage.getItem("user");
     if(userData) {
-      const parsedUser = JSON.parse(userData);
-      setUser(parsedUser);
+      const user = JSON.parse(userData);
+      setUser(user);
     }
   };
   /* User */
 
-
   /* Ong */
-  const [ong, setOng] = useState<User | null>(null);
+  const [ong, setOng] = useState<User>();
 
   const getOng = async () => {
     try {
@@ -34,30 +46,153 @@ const OngScreen = ({ route, navigation }: any) => {
       setOng(response.data);
     } 
     catch(error) {
-      console.error('Erro ao carregar a ONG:', error);
+      console.log(error);
     }
   };
   /* Ong */
-  
+
+  /* Tabs */
+  const [activeTab, setActiveTab] = useState('CreatedActivities');
+  /* Tabs */
+
+  /* Activities */
+  const [activities, setActivities] = useState<Activity[]>([]);
+
+  const getActivities = async () => {
+    try {
+      const response = await api.get(`/activity/getAllByOngId/${ong!.id}`);  
+      setActivities(response.data);
+    } 
+    catch(error: any) {
+      console.log('Erro na requisição:', error.response.data.message);
+    }
+  };
+
+  const renderActivity = ({ item }: { item: Activity }) => (
+    <ActivityCard activity={item} onPress={() => handleActivityPress(item.id)} />
+  );
+
+  const handleActivityPress = (activityId: string) => {
+    navigation.navigate('ActivityScreen', { activityId });
+  };
+  /* Activities */
+
   useEffect(() => {
-    getStorageUser();
+    getStorageUser()
     getOng();
   }, []);
+  
+  useEffect(() => {
+    if(ong) {
+      getActivities();
+    }
+  }, [ong]);
 
   return (
     <Layout navigation={navigation}>
       {ong ? (
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-          <Text style={styles.title}>
-            {ong.name}
-          </Text>
+        <View style={styles.container}>
+          <View style={styles.mainInfo}>
+            <Image 
+              source={ong.profilePhotoUrl ? { uri: ong.profilePhotoUrl } : require('../assets/images/image-not-found.png')} 
+              style={styles.image} 
+            />
 
-          <Text style={styles.category}>
-            {ong.category}
-          </Text> 
-        </ScrollView>
+            <Text style={styles.name}>
+              {ong.name}
+            </Text>
+
+            <View style={styles.socialLinks}>
+              {ong.socialLinks?.twitter && (
+                <View style={styles.socialLink}>
+                  <Ionicons name="logo-twitter" size={14} color={COLORS.black} />
+                  <Text onPress={() => Linking.openURL(`https://twitter.com/${ong.socialLinks!.twitter}`)}>
+                    {ong.socialLinks.twitter}
+                  </Text>
+                </View>
+              )}
+
+              {ong.socialLinks?.instagram && (
+                <View style={styles.socialLink}>
+                  <Ionicons name="logo-instagram" size={14} color={COLORS.black} />
+                  <Text onPress={() => Linking.openURL(`https://instagram.com/${ong.socialLinks!.instagram}`)}>
+                    {ong.socialLinks.instagram}
+                  </Text>
+                </View>
+              )}
+
+              {ong.socialLinks?.facebook && (
+                <View style={styles.socialLink}>
+                  <Ionicons name="logo-facebook" size={14} color={COLORS.black} />
+                  <Text onPress={() => Linking.openURL(`https://facebook.com/${ong.socialLinks!.facebook}`)}>
+                    {ong.socialLinks.facebook}
+                  </Text>
+                </View>
+              )}
+
+              {ong.socialLinks?.linkedin && (
+                <View style={styles.socialLink}>
+                  <Ionicons name="logo-linkedin" size={14} color={COLORS.black} />
+                  <Text onPress={() => Linking.openURL(`https://linkedin.com/in/${ong.socialLinks!.linkedin}`)}>
+                    {ong.socialLinks.linkedin}
+                  </Text>
+                </View>
+              )}
+            </View>
+
+            {/* Só mostrar caso ong.pix não for nulo */}
+            <TouchableOpacity onPress={() => handleCopyToClipboard(ong.email!.address)} style={styles.donationContainer}>
+              <MaterialIcons name="pix" size={14} color="#000" />
+              <Text style={styles.donationText}>
+                {ong.email?.address}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.tabContainer}>
+            <TouchableOpacity onPress={() => setActiveTab('CreatedActivities')}>
+              <Text style={[styles.tabText, activeTab === 'CreatedActivities' && styles.activeTabText]}>
+                Atividades
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => setActiveTab('ItemsForDonation')}>
+              <Text style={[styles.tabText, activeTab === 'ItemsForDonation' && styles.activeTabText]}>
+                Itens para Doação
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {activeTab === 'CreatedActivities' && (
+            activities.length > 0 ? (
+              <FlatList
+                data={activities}
+                keyExtractor={(item) => item.id}
+                renderItem={renderActivity}
+                showsVerticalScrollIndicator={false}
+              />
+            ) : (
+              <Text style={styles.nullText}>
+                Essa ONG ainda não possui atividades!
+              </Text>
+            )
+          )}
+
+          {activeTab === "ItemsForDonation" && (
+            ong.donationItems?.length > 0 ? (
+              ong.donationItems.map((item, index) => (
+                <Text key={index} style={styles.itemText}>{item.name}</Text>
+              ))
+            ) : (
+              <Text style={styles.nullText}>
+                Essa ONG ainda não possui itens para doação!
+              </Text>
+            )
+          )}
+
+        </View>
       ) : (
-        <Text>Erro ao carregar Atividade</Text>
+        <Text>Erro ao carregar usuário</Text>
       )}
     </Layout>
   );
@@ -65,26 +200,86 @@ const OngScreen = ({ route, navigation }: any) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
-    width: '100%',
-  },
-  
-  contentContainer: {
-    alignItems: 'center',
-    paddingBottom: 20, 
+    height: "100%",
+    width: "100%",
   },
 
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold'
+  mainInfo: {
+    alignItems: "center",
+    justifyContent: "center",
   },
 
-  category: {
-    fontSize: 14,
-    fontWeight: 'bold',
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+
+  name: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginTop: 20,
+    width: "100%",
+    textAlign: "center",
+  },
+
+  socialLinks: {
     marginTop: 10,
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: 15,
   },
-  
+
+  socialLink: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+
+  donationContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 5,
+    padding: 10,
+  },
+
+  donationText: {
+
+  },
+
+  tabContainer: {
+    width: "100%",
+    flexDirection: "row",
+    gap: 30,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+
+  tabText: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: COLORS.black,
+  },
+
+  activeTabText: {
+    color: COLORS.primary,
+  },
+
+  nullText: {
+    flex: 1,
+    fontSize: 20,
+  },
+
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: COLORS.secondary,
+  },
 });
 
-export default OngScreen;
+export default ProfileScreen;

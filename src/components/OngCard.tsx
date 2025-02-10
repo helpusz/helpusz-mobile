@@ -4,6 +4,8 @@ import { TouchableOpacity, Text, StyleSheet, Image, View } from 'react-native';
 import COLORS from '../constants/colors';
 import { User } from '../models/User';
 import OngCategoryEnum from '../utils/OngCategoryEnum';
+import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 interface OngCardProps {
   ong: User;  
@@ -13,7 +15,10 @@ interface OngCardProps {
 const OngCard: React.FC<OngCardProps> = (props) => {
   return (
     <TouchableOpacity style={styles.container} onPress={props.onPress}>
-      <Image source={require('../assets/images/image-not-found.png')} style={styles.image} />
+      <Image 
+        source={props.ong.profilePhotoUrl ? { uri: props.ong.profilePhotoUrl } : require('../assets/images/image-not-found.png')} 
+        style={styles.image} 
+      />
       
       <View style={styles.infoContainer}>
         <Text style={styles.name}>
@@ -21,10 +26,27 @@ const OngCard: React.FC<OngCardProps> = (props) => {
         </Text>
 
         
-        <Text style={styles.category}>
-          {OngCategoryEnum[props.ong.category!]}
-        </Text>
+        <View style={styles.categoryAndLocationContainer}>
+          <View style={styles.row}>
+            <Text>
+              <MaterialIcons name="category" size={14} color="#000" />
+            </Text>
 
+            <Text>
+              {OngCategoryEnum[props.ong.category!]}
+            </Text>
+          </View>
+          
+          <View style={styles.row}>
+            <Text>
+              <Icon name="pin-outline" size={14} color={COLORS.black} /> 
+            </Text>
+
+            <Text>
+              Paranaguá - PR
+            </Text>
+          </View>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -59,10 +81,17 @@ const styles = StyleSheet.create({
     color: COLORS.black,
   },
 
-  category: {
-    fontSize: 14,
-    color: COLORS.black,
+  categoryAndLocationContainer: {
+    flexDirection: 'column',
+    gap: 5,
   },
+
+  row : {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  
 });
 
 export default OngCard;

@@ -10,19 +10,26 @@ import { Activity } from '../models/Activity';
 import ActivityCard from '../components/ActivityCard';
 import { User } from '../models/User';
 import OngCard from '../components/OngCard';
+import { useFocusEffect } from '@react-navigation/native';
 
 const HomeScreen = ({ navigation }: any) => {
-  useEffect(() => {
-    const loadSelectedCategory = async () => {
-      const category = await AsyncStorage.getItem('selectedCategory');
-      setSelectedCategory(category);
-    };
-  
-    loadSelectedCategory();
-    getuser();
-    getActivities();
-    getOngs();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadSelectedCategory = async () => {
+        const category = await AsyncStorage.getItem('selectedCategory');
+        setSelectedCategory(category);
+      };
+    
+      loadSelectedCategory();
+      getuser();
+      getActivities();
+      getOngs();
+
+      return () => {
+        console.log('Saindo da Home');
+      };
+    }, [])
+  );
   
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -85,8 +92,6 @@ const HomeScreen = ({ navigation }: any) => {
     [OngCategoryEnum.IGUALDADE_DE_GENERO]: require('../assets/images/categories/images/IGUALDADE_DE_GENERO.jpeg'),
     [OngCategoryEnum.SAUDE]: require('../assets/images/categories/images/SAUDE.webp'),
     [OngCategoryEnum.INCLUSAO_DE_PESSOAS_COM_DEFICIENCIA]: require('../assets/images/categories/images/INCLUSAO_DE_PESSOAS_COM_DEFICIENCIA.webp'), 
-
-    
   };
   
   const handleCategoryPress = async (category: keyof typeof OngCategoryEnum) => {
@@ -103,13 +108,22 @@ const HomeScreen = ({ navigation }: any) => {
       getOngsByCategory(category);
     }
   };
-  
   /* Categories */
 
   /* Activities */
   const [activities, setActivities] = useState<Activity[]>([]);
   
   const getActivities = async () => {
+    if(await AsyncStorage.getItem('selectedCategory') == null || await AsyncStorage.getItem('selectedCategory') == undefined) {
+      getAllActivities();
+    }
+    else {
+      const category = await AsyncStorage.getItem('selectedCategory');
+      getActivitiesByCategory(category?.toString() as keyof typeof OngCategoryEnum);
+    }
+  };
+
+  const getAllActivities = async () => {
     try {
       const response = await api.get('/activity/getAll');
       setActivities(response.data);
@@ -117,14 +131,6 @@ const HomeScreen = ({ navigation }: any) => {
     catch(error: any) {
       console.log('Erro na requisição:', error.response.data.message);
     }
-  };
-
-  const renderActivity = ({ item }: { item: Activity }) => (
-    <ActivityCard activity={item} onPress={() => handleActivityPress(item.id)} />
-  );
-
-  const handleActivityPress = (activityId: string) => {
-    navigation.navigate('ActivityScreen', { activityId });
   };
 
   const getActivitiesByCategory = async (category: keyof typeof OngCategoryEnum) => {
@@ -137,6 +143,16 @@ const HomeScreen = ({ navigation }: any) => {
       console.log(error.response.data.message);
     }
   };
+
+  const renderActivity = ({ item }: { item: Activity }) => (
+    <ActivityCard activity={item} onPress={() => handleActivityPress(item.id)} />
+  );
+
+  const handleActivityPress = (activityId: string) => {
+    navigation.navigate('ActivityScreen', { activityId });
+  };
+
+
   
   /* Activities */
 
@@ -252,7 +268,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 20,
     position: 'absolute',
-    top: 20,
     width: '100%',
     justifyContent: 'center',
   },
@@ -273,7 +288,7 @@ const styles = StyleSheet.create({
   categoriesListContainer: {
     width: '100%',
     maxHeight: 120,
-    marginTop: 80,
+    marginTop: 60,
     marginBottom: 9,
   },
 

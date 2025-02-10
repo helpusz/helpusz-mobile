@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Modal } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Linking } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -16,12 +16,24 @@ const ProfileScreen = ({ navigation }: any) => {
 
   const getStorageUser = async () => {
     const userData = await AsyncStorage.getItem("user");
-    if (userData) {
+    if(userData) {
       const user = JSON.parse(userData);
       setUser(user);
     }
   };
   /* User */
+
+  /* Profile Picture */
+  const [isImageExpanded, setIsImageExpanded] = useState(false);
+  
+  const handleImagePress = () => {
+    setIsImageExpanded(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsImageExpanded(false);
+  };
+  /* Profile Picture */
 
   /* Tabs */
   const [activeTab, setActiveTab] = useState('RegisteredActivities');
@@ -49,6 +61,12 @@ const ProfileScreen = ({ navigation }: any) => {
   };
   /* Activities */
 
+  /* Settings */
+  const openSettings = async () => {
+    navigation.navigate('SettingsScreen');
+  };
+  /* Settings */
+
   useEffect(() => {
     getStorageUser();
   }, []);
@@ -63,15 +81,17 @@ const ProfileScreen = ({ navigation }: any) => {
     <Layout navigation={navigation}>
       {user ? (
         <View style={styles.container}>
-          <View style={styles.topBar}>
-            <Icon name="settings-outline" size={24} color={COLORS.black} />
+          <View style={styles.topBar} >
+            <Icon name="settings-outline" size={24} style={styles.settingsIcon} onPress={() => openSettings()}/>
           </View>
           
           <View style={styles.mainInfo}>
-            <Image
-              source={require("../assets/images/image-not-found.png")}
-              style={styles.profileImage}
-            />
+            <TouchableOpacity onPress={handleImagePress}>
+              <Image
+                source={{ uri: user.profilePhotoUrl }}
+                style={styles.profileImage}
+              />
+            </TouchableOpacity>
 
             <Text style={styles.name}>
               {user.name}
@@ -122,12 +142,6 @@ const ProfileScreen = ({ navigation }: any) => {
                 Atividades Inscritas
               </Text>
             </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => setActiveTab('Ongs')}>
-              <Text style={[styles.tabText, activeTab === 'Ongs' && styles.activeTabText]}>
-                Teste
-              </Text>
-            </TouchableOpacity>
           </View>
 
           {activeTab === 'RegisteredActivities' && (
@@ -144,6 +158,23 @@ const ProfileScreen = ({ navigation }: any) => {
               </Text>
             )
           )}
+                {isImageExpanded && (
+        <Modal
+          transparent={true}
+          animationType="fade"
+          visible={isImageExpanded}
+          onRequestClose={handleCloseModal}
+        >
+          <TouchableOpacity style={styles.modalBackground} onPress={handleCloseModal}>
+            <View style={styles.modalContent}>
+              <Image
+                source={{ uri: user.profilePhotoUrl }}
+                style={styles.expandedImage}
+              />
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      )}
         </View>
       ) : (
         <Text>Erro ao carregar usuário</Text>
@@ -165,15 +196,39 @@ const styles = StyleSheet.create({
   
   topBar: {
     width: "100%",
-    marginTop: 20,
     flexDirection: "row",
     justifyContent: "flex-end",
+  },
+
+  settingsIcon: {
+    color: COLORS.black,
+    position: "absolute",
+    padding: 10,
   },
 
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
+    backgroundColor: COLORS.secondary,
+  },
+
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+
+  modalContent: {
+    borderRadius: 10,
+    borderWidth: 2,
+  },
+
+  expandedImage: {
+    width: 300,
+    height: 300,
+    borderRadius: 10,
   },
 
   name: {

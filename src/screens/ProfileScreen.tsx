@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Modal } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Linking } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -22,6 +22,18 @@ const ProfileScreen = ({ navigation }: any) => {
     }
   };
   /* User */
+
+  /* Profile Picture */
+  const [isImageExpanded, setIsImageExpanded] = useState(false);
+  
+  const handleImagePress = () => {
+    setIsImageExpanded(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsImageExpanded(false);
+  };
+  /* Profile Picture */
 
   /* Tabs */
   const [activeTab, setActiveTab] = useState('RegisteredActivities');
@@ -74,10 +86,12 @@ const ProfileScreen = ({ navigation }: any) => {
           </View>
           
           <View style={styles.mainInfo}>
-            <Image
-              source={{ uri: user?.profilePhotoUrl || "../assets/images/image-not-found.png" }}
-              style={styles.profileImage}
-            />
+            <TouchableOpacity onPress={handleImagePress}>
+              <Image
+                source={{ uri: user.profilePhotoUrl }}
+                style={styles.profileImage}
+              />
+            </TouchableOpacity>
 
             <Text style={styles.name}>
               {user.name}
@@ -128,12 +142,6 @@ const ProfileScreen = ({ navigation }: any) => {
                 Atividades Inscritas
               </Text>
             </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => setActiveTab('Ongs')}>
-              <Text style={[styles.tabText, activeTab === 'Ongs' && styles.activeTabText]}>
-                Teste
-              </Text>
-            </TouchableOpacity>
           </View>
 
           {activeTab === 'RegisteredActivities' && (
@@ -150,6 +158,23 @@ const ProfileScreen = ({ navigation }: any) => {
               </Text>
             )
           )}
+                {isImageExpanded && (
+        <Modal
+          transparent={true}
+          animationType="fade"
+          visible={isImageExpanded}
+          onRequestClose={handleCloseModal}
+        >
+          <TouchableOpacity style={styles.modalBackground} onPress={handleCloseModal}>
+            <View style={styles.modalContent}>
+              <Image
+                source={{ uri: user.profilePhotoUrl }}
+                style={styles.expandedImage}
+              />
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      )}
         </View>
       ) : (
         <Text>Erro ao carregar usuário</Text>
@@ -186,6 +211,24 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     backgroundColor: COLORS.secondary,
+  },
+
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+
+  modalContent: {
+    borderRadius: 10,
+    borderWidth: 2,
+  },
+
+  expandedImage: {
+    width: 300,
+    height: 300,
+    borderRadius: 10,
   },
 
   name: {

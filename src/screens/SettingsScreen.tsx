@@ -7,6 +7,7 @@ import Input from "../components/Input";
 import COLORS from "../constants/colors";
 import api from "../api/api";
 import { HttpStatusCode } from "axios";
+import SocialLinks from "../utils/SocialLinks";
 
 const SettingsScreen = ({ navigation }: any) => {
   /* User */
@@ -35,6 +36,13 @@ const SettingsScreen = ({ navigation }: any) => {
     } 
   };
 
+  const setSocialLinks = (value: string, variable: keyof SocialLinks) => {
+    if(user) {
+      setUser ({ ...user, [variable]: value });
+      console.log(user);
+    } 
+  };
+
   useEffect(() => {
     getStorageUser();
   }, []);
@@ -45,9 +53,6 @@ const SettingsScreen = ({ navigation }: any) => {
         <View style={styles.container}>
           <View style={styles.topBar} >
             <Text>
-            <Text style={styles.topBarCancelText}>
-              Cancelar
-            </Text>
             </Text>
             
             <Text style={styles.topBarText} onPress={() => updateUser(user)}>
@@ -69,6 +74,80 @@ const SettingsScreen = ({ navigation }: any) => {
                 value={user?.name || ''} 
                 noStyle={true}
                 onChange={(value) => handleVariableChange(value, 'name')}
+              />
+            </View>
+          </View>
+
+          <Text style={styles.subtitle}>
+            Social
+          </Text>
+
+          <View style={styles.option}>
+            <View>
+              <Text>Twitter</Text>
+            </View>
+
+            <View>
+              <Input 
+                value={user.socialLinks?.twitter}
+                noStyle={true}
+                onChange={(value) => setSocialLinks(value, 'twitter')}
+              />
+            </View>
+          </View>
+
+          <View style={styles.option}>
+            <View>
+              <Text>Instagram</Text>
+            </View>
+
+            <View>
+              <Input 
+                value={user.socialLinks?.instagram}
+                noStyle={true}
+                onChange={(value) => setSocialLinks(value, 'instagram')}
+              />
+            </View>
+          </View>
+
+          <View style={styles.option}>
+            <View>
+              <Text>Facebook</Text>
+            </View>
+
+            <View>
+              <Input 
+                value={user.socialLinks?.facebook}
+                noStyle={true}
+                onChange={(value) => setSocialLinks(value, 'facebook')}
+              />
+            </View>
+          </View>
+
+          <View style={styles.option}>
+            <View>
+              <Text>Linkedin</Text>
+            </View>
+
+            <View>
+              <Input 
+                value={user.socialLinks?.linkedin}
+                noStyle={true}
+                onChange={(value) => setSocialLinks(value, 'linkedin')}
+              />
+            </View>
+          </View>
+
+          <View style={styles.option}>
+            <View>
+              <Text>Site</Text>
+            </View>
+
+            <View>
+              <Input 
+                value={user.socialLinks?.site}
+                noStyle={true}
+                onChange={(value) => setSocialLinks(value, 'site')}
               />
             </View>
           </View>
@@ -95,76 +174,6 @@ const SettingsScreen = ({ navigation }: any) => {
             <View>
               <Input 
                 value={'Hard Code'}
-                noStyle={true}
-                onChange={(value) => setName(value)}
-              />
-            </View>
-          </View>
-
-          <View style={styles.option}>
-            <View>
-              <Text>Twitter</Text>
-            </View>
-
-            <View>
-              <Input 
-                value={user.socialLinks?.twitter}
-                noStyle={true}
-                onChange={(value) => handleVariableChange(value, 'socialLinks', 'twitter')}
-              />
-            </View>
-          </View>
-
-          <View style={styles.option}>
-            <View>
-              <Text>Instagram</Text>
-            </View>
-
-            <View>
-              <Input 
-                value={user.socialLinks?.instagram}
-                noStyle={true}
-                onChange={(value) => setName(value)}
-              />
-            </View>
-          </View>
-
-          <View style={styles.option}>
-            <View>
-              <Text>Facebook</Text>
-            </View>
-
-            <View>
-              <Input 
-                value={user.socialLinks?.facebook}
-                noStyle={true}
-                onChange={(value) => setName(value)}
-              />
-            </View>
-          </View>
-
-          <View style={styles.option}>
-            <View>
-              <Text>Linkedin</Text>
-            </View>
-
-            <View>
-              <Input 
-                value={user.socialLinks?.linkedin}
-                noStyle={true}
-                onChange={(value) => setName(value)}
-              />
-            </View>
-          </View>
-
-          <View style={styles.option}>
-            <View>
-              <Text>Site</Text>
-            </View>
-
-            <View>
-              <Input 
-                value={user.socialLinks?.site}
                 noStyle={true}
                 onChange={(value) => setName(value)}
               />

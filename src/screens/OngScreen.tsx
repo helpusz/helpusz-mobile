@@ -93,9 +93,9 @@ const ProfileScreen = ({ route, navigation }: any) => {
       {ong ? (
         <View style={styles.container}>
           <View style={styles.mainInfo}>
-            <Image
-              source={require("../assets/images/image-not-found.png")}
-              style={styles.profileImage}
+            <Image 
+              source={ong.profilePhotoUrl ? { uri: ong.profilePhotoUrl } : require('../assets/images/image-not-found.png')} 
+              style={styles.image} 
             />
 
             <Text style={styles.name}>
@@ -156,9 +156,9 @@ const ProfileScreen = ({ route, navigation }: any) => {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setActiveTab('Ongs')}>
-              <Text style={[styles.tabText, activeTab === 'Ongs' && styles.activeTabText]}>
-                Teste
+            <TouchableOpacity onPress={() => setActiveTab('ItemsForDonation')}>
+              <Text style={[styles.tabText, activeTab === 'ItemsForDonation' && styles.activeTabText]}>
+                Itens para Doação
               </Text>
             </TouchableOpacity>
           </View>
@@ -177,6 +177,19 @@ const ProfileScreen = ({ route, navigation }: any) => {
               </Text>
             )
           )}
+
+          {activeTab === "ItemsForDonation" && (
+            ong.donationItems?.length > 0 ? (
+              ong.donationItems.map((item, index) => (
+                <Text key={index} style={styles.itemText}>{item.name}</Text>
+              ))
+            ) : (
+              <Text style={styles.nullText}>
+                Essa ONG ainda não possui itens para doação!
+              </Text>
+            )
+          )}
+
         </View>
       ) : (
         <Text>Erro ao carregar usuário</Text>
@@ -213,7 +226,6 @@ const styles = StyleSheet.create({
   socialLinks: {
     marginTop: 10,
     width: "100%",
-    height: 40,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -232,6 +244,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 5,
+    padding: 10,
   },
 
   donationText: {
@@ -259,6 +272,13 @@ const styles = StyleSheet.create({
   nullText: {
     flex: 1,
     fontSize: 20,
+  },
+
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: COLORS.secondary,
   },
 });
 

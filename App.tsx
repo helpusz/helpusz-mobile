@@ -20,7 +20,7 @@ const Stack = createNativeStackNavigator();
 const App: React.FC = () => {
   return (
     <NavigationContainer>
-      <StatusBar />
+      <StatusBar hidden={true} />
       <Stack.Navigator
         initialRouteName="WelcomeScreen"
         screenOptions={{

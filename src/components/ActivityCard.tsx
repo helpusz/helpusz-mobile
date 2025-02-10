@@ -12,7 +12,10 @@ interface ActivityCardProps {
 const ActivityCard: React.FC<ActivityCardProps> = (props) => {
   return (
     <TouchableOpacity style={styles.container} onPress={props.onPress}>
-      <Image source={require('../assets/images/image-not-found.png')} style={styles.image} />
+      <Image 
+        source={props.activity.imageURL ? { uri: props.activity.imageURL } : require('../assets/images/image-not-found.png')} 
+        style={styles.image} 
+      />
       
       <View style={styles.infoContainer}>
         <Text style={styles.name}>
@@ -42,8 +45,7 @@ const ActivityCard: React.FC<ActivityCardProps> = (props) => {
             </Text>
 
             <Text>
-              {/* {new Date(props.activity.startDate).getDate().toString().padStart(2, '0')} */}
-              11 de Dezembro
+              {new Date(props.activity.startDate).toLocaleDateString('pt-BR')}
             </Text>
           </View>
         </View>
